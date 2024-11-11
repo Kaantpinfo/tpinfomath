@@ -6,11 +6,19 @@ import colorsys
 def get_color(progress, depth):
     # Changement de couleur selon la progression et la profondeur
     hue = (progress + depth * 0.1) % 1.0
-    return colorsys.hsv_to_rgb(hue, 0.8, 0.9)
+    data = colorsys.hsv_to_rgb(hue, 0.8, 0.9)
+    # Transforme une couleur en RGB en hexadecimal
+    R = data[0]
+    G = data[1]
+    B = data[2]
+    color = f'#{int(R*255):02X}{int(G*255):02X}{int(B*255):02X}'
+    return color
 
-def interpreter(commandes, longueur=10, angle=25):
+    
+def interpreter(commandes, canvas, longueur=10, angle=25):
+
     def draw_line(x1, y1, x2, y2, color):
-        canvas.create_line(x1, y1, x2, y2, fill=color, width=2)
+        canvas.create_line(x1, y1, x2, y2, fill=color, width=2)  # Use canvas for drawing
 
     def turn_right(angle):
         nonlocal direction
@@ -26,14 +34,7 @@ def interpreter(commandes, longueur=10, angle=25):
     def restore_position():
         x, y, direction = stack.pop()
 
-    # Initialize Tkinter window and canvas
-    window = tk.Tk()
-    window.title("L-System")
-
-    canvas = tk.Canvas(window, width=800, height=600, bg="black")
-    canvas.pack()
-
-    # Initial position and direction
+    # Initial position and direction (can be adjusted if needed)
     x, y = 400, 300
     direction = 90
     stack = []
@@ -42,13 +43,13 @@ def interpreter(commandes, longueur=10, angle=25):
     depth = 0
 
     for i, cmd in enumerate(commandes):
-        #progress = i / total_steps
-        #color = get_color(progress, depth)
+        progress = i / total_steps
+        color = get_color(progress, depth)  # Can be used for color variation
 
         if cmd == 'F':
             x1, y1 = x, y
             x2, y2 = x + longueur * math.cos(math.radians(direction)), y + longueur * math.sin(math.radians(direction))
-            draw_line(x1, y1, x2, y2, "#FF0000")
+            draw_line(x1, y1, x2, y2, color)  # Use canvas for drawing
             x, y = x2, y2
         elif cmd == '+':
             turn_right(angle)
@@ -59,8 +60,6 @@ def interpreter(commandes, longueur=10, angle=25):
             depth += 1
         elif cmd == ']':
             restore_position()
-
-    window.mainloop()
 
 def lsystem(chaine, regle, iteration):
     for i in range(iteration):
@@ -76,26 +75,46 @@ def lsystem(chaine, regle, iteration):
         chaine = nxt
     return chaine
 
-def dessiner_lsystem(chaine_depart, regle, iterations, longueur=10, angle=25):
+def dessiner_lsystem(canvas, chaine_depart, regle, iterations, longueur=10, angle=25):
     resultat = lsystem(chaine_depart, regle, iterations)
-    interpreter(resultat, longueur, angle)
+    interpreter(resultat, canvas, longueur, angle)
 
 # Exemples de L-systèmes fractals
-def arbre():
+def arbre(canvas):
     # Règle pour un arbre fractal
     regle = ["F", "FF+[+F-F-F]-[-F+F+F]"]
     regle2 = ["F", "F--[+F-F-F]+X", "X", "F[--+--]F"]
-    dessiner_lsystem("F", regle2, 4, longueur=20, angle=-122.5)
+    canvas.delete("all")
+    dessiner_lsystem(canvas, "F", regle2, 4, longueur=20, angle=-122.5)
 
-def fougere():
+def fougere(canvas):
     # Règle pour une fougère
     regle = ["X", "F+[[X]-X]-F[-FX]+X", "F", "FF"]
-    dessiner_lsystem("X", regle, 5, longueur=5, angle=25)
+    canvas.delete("all")
+    dessiner_lsystem(canvas, "X", regle, 5, longueur=5, angle=25)
 
-def flocon():
+def flocon(canvas):
     # Règle pour un flocon de Koch
     regle = ["F", "F+F--F+F"]
-    dessiner_lsystem("F--F--F", regle, 4, longueur=5, angle=60)
+    canvas.delete("all")
+    dessiner_lsystem(canvas, "F--F--F", regle, 4, longueur=5, angle=60)
 
+window = tk.Tk()
+window.title("L-System")
 
-arbre() 
+# Création du canvas
+canvas = tk.Canvas(window, width=800, height=600, bg="black")
+canvas.pack()
+
+# Création du menu
+menu_bar = tk.Menu(window)
+window.config(menu=menu_bar)
+
+# Création du menu "Fractale"
+menu_fractal = tk.Menu(menu_bar, tearoff=0)
+menu_bar.add_cascade(label="Fractale", menu=menu_fractal)
+menu_fractal.add_command(label="Arbre", command=lambda: arbre(canvas))
+menu_fractal.add_command(label="Fougère", command=lambda: fougere(canvas))
+menu_fractal.add_command(label="Flocon de Koch", command=lambda: flocon(canvas))
+
+window.mainloop()
