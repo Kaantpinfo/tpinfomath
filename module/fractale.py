@@ -15,49 +15,32 @@ def get_color(progress, depth):
     
 def interpreter(commandes, canvas, longueur=10, angle=25):
 
-    def draw_line(x1, y1, x2, y2, color):
-        canvas.create_line(x1, y1, x2, y2, fill=color, width=2)  # Use canvas for drawing
-
-    def turn_right(angle):
-        nonlocal direction
-        direction = (direction + angle) % 360
-
-    def turn_left(angle):
-        nonlocal direction
-        direction = (direction - angle) % 360
-
-    def save_position():
-        stack.append((x, y, direction))
-
-    def restore_position():
-        x, y, direction = stack.pop()
-
-    # Initial position and direction (can be adjusted if needed)
-    x, y = 400, 300
+    x, y = 400, 100
     direction = 90
     stack = []
-
     total_steps = len(commandes)
     depth = 0
-
+            
     for i, cmd in enumerate(commandes):
         progress = i / total_steps
-        color = get_color(progress, depth)  # Can be used for color variation
-
+        color = get_color(progress, depth)
+                
         if cmd == 'F':
             x1, y1 = x, y
-            x2, y2 = x + longueur * math.cos(math.radians(direction)), y + longueur * math.sin(math.radians(direction))
-            draw_line(x1, y1, x2, y2, color)  # Use canvas for drawing
+            rad_angle = math.radians(direction)
+            x2 = x + longueur * math.cos(rad_angle)
+            y2 = y + longueur * math.sin(rad_angle)
+            canvas.create_line(x1, y1, x2, y2, fill=color, width=2)
             x, y = x2, y2
         elif cmd == '+':
-            turn_right(angle)
+            direction = (direction + angle) % 360
         elif cmd == '-':
-            turn_left(angle)
+            direction = (direction - angle) % 360
         elif cmd == '[':
-            save_position()
+            stack.append((x, y, direction))
             depth += 1
         elif cmd == ']':
-            restore_position()
+            x, y, direction = stack.pop()
 
 def lsystem(chaine, regle, iteration):
     for _ in range(iteration):
