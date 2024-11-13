@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-import tkinter as tk
 import math
 import colorsys
 
@@ -62,17 +60,18 @@ def interpreter(commandes, canvas, longueur=10, angle=25):
             restore_position()
 
 def lsystem(chaine, regle, iteration):
-    for i in range(iteration):
-        nxt = ""
+    for _ in range(iteration):
+        next_gen = ""
         for c in chaine:
             found = False
             for j in range(0, len(regle), 2):
                 if c == regle[j]:
-                    rep = regle[j + 1]
+                    next_gen += regle[j + 1]
                     found = True
                     break
-            nxt += rep if found else c
-        chaine = nxt
+            if not found:
+                next_gen += c
+        chaine = next_gen
     return chaine
 
 def dessiner_lsystem(canvas, chaine_depart, regle, iterations, longueur=10, angle=25):
@@ -85,7 +84,7 @@ def arbre(canvas):
     regle = ["F", "FF+[+F-F-F]-[-F+F+F]"]
     regle2 = ["F", "F--[+F-F-F]+X", "X", "F[--+--]F"]
     canvas.delete("all")
-    dessiner_lsystem(canvas, "F", regle2, 4, longueur=20, angle=-122.5)
+    dessiner_lsystem(canvas, "F", regle, 4, longueur=20, angle=-122.5)
 
 def fougere(canvas):
     # Règle pour une fougère
@@ -98,23 +97,3 @@ def flocon(canvas):
     regle = ["F", "F+F--F+F"]
     canvas.delete("all")
     dessiner_lsystem(canvas, "F--F--F", regle, 4, longueur=5, angle=60)
-
-window = tk.Tk()
-window.title("L-System")
-
-# Création du canvas
-canvas = tk.Canvas(window, width=800, height=600, bg="black")
-canvas.pack()
-
-# Création du menu
-menu_bar = tk.Menu(window)
-window.config(menu=menu_bar)
-
-# Création du menu "Fractale"
-menu_fractal = tk.Menu(menu_bar, tearoff=0)
-menu_bar.add_cascade(label="Fractale", menu=menu_fractal)
-menu_fractal.add_command(label="Arbre", command=lambda: arbre(canvas))
-menu_fractal.add_command(label="Fougère", command=lambda: fougere(canvas))
-menu_fractal.add_command(label="Flocon de Koch", command=lambda: flocon(canvas))
-
-window.mainloop()
