@@ -1,39 +1,111 @@
-from tkinter import Tk, Button, Canvas, Menu
+from tkinter import Tk, Button, Canvas, Menu, Label, Entry, Spinbox
 from fractale import *
 
-class Window(Tk):
+class Fenetre(Tk):
     def __init__(self):
         super().__init__()
 
+        # Barre de menu
         menu_bar = Menu(self)
-        Window.config(self, menu=menu_bar)
+        Fenetre.config(self, menu=menu_bar)
         
-        menu_file = Menu(menu_bar, tearoff=0)
-        menu_bar.add_cascade(label="Fichier", menu=menu_file)
-        menu_file.add_command(label="Charger")
-        menu_file.add_command(label="Exporter")
+        # Menu Fichier
+        menu_fichier = Menu(menu_bar, tearoff=0)
+        menu_bar.add_cascade(label="Fichier", menu=menu_fichier)
+        menu_fichier.add_command(label="Charger")
+        menu_fichier.add_command(label="Exporter")
         
-        menu_fractal = Menu(menu_bar, tearoff=0)
-        menu_bar.add_cascade(label="Fractale", menu=menu_fractal)
-        menu_fractal.add_command(label="Arbre", command=lambda: arbre(canvas))
-        menu_fractal.add_command(label="Fougère", command=lambda: fougere(canvas))
-        menu_fractal.add_command(label="Flocon de Koch", command=lambda: flocon(canvas))
+        # Menu Fractale
+        menu_fractale = Menu(menu_bar, tearoff=0)
+        menu_bar.add_cascade(label="Fractale", menu=menu_fractale)
+        menu_fractale.add_command(label="Arbre", command=lambda: (arbre(self.canvas), self.cacher_parametres()))
+        menu_fractale.add_command(label="Fougère", command=lambda: (fougere(self.canvas), self.cacher_parametres()))
+        menu_fractale.add_command(label="Flocon de Koch", command=lambda: (flocon(self.canvas), self.cacher_parametres()))
+        menu_fractale.add_command(label="Hilbert", command=lambda: (hilbert(self.canvas), self.cacher_parametres()))
+        menu_fractale.add_command(label="Personnalisé", command=self.afficher_parametres)
 
-        
-        button1 = Button(self, text="Button 1")
-        button1.grid(column=0, row =0)
-        button2 = Button(self, text="Button 2")
-        button2.grid(column=0, row =1)
-        button3 = Button(self, text="Button 3")
-        button3.grid(column=0, row =2)
+        # Canvas pour afficher les fractales
+        self.canvas = Canvas(self, width=800, height=600, bg="black")
+        self.canvas.grid(column=2, row=0, rowspan=14)
 
-        canvas = Canvas(self, width=800, height=600, bg="black")
-        canvas.grid(column=1, row=0, rowspan=10)
+        # Champs de saisie pour les paramètres de L-System
+        self.chaine_depart_label = Label(self, text="Graine")
+        self.chaine_depart_label.grid(row=3, column=0, sticky="w", padx=5, pady=5)
+        self.chaine_depart_entry = Entry(self)
+        self.chaine_depart_entry.grid(row=3, column=1, sticky="w", padx=5, pady=5)
+
+        self.regle_label = Label(self, text="Règle")
+        self.regle_label.grid(row=4, column=0, sticky="w", padx=5, pady=5)
+        self.regle_entry = Entry(self)
+        self.regle_entry.grid(row=4, column=1, sticky="w", padx=5, pady=5)
+
+        self.iterations_label = Label(self, text="Itérations")
+        self.iterations_label.grid(row=5, column=0, sticky="w", padx=5, pady=5)
+        self.iterations_spinbox = Spinbox(self, from_=1, to=10, width=5)
+        self.iterations_spinbox.grid(row=5, column=1, sticky="w", padx=5, pady=5)
+
+        self.longueur_label = Label(self, text="Longueur")
+        self.longueur_label.grid(row=6, column=0, sticky="w", padx=5, pady=5)
+        self.longueur_spinbox = Spinbox(self, from_=1, to=50, width=5)
+        self.longueur_spinbox.grid(row=6, column=1, sticky="w", padx=5, pady=5)
+
+        self.angle_label = Label(self, text="Angle")
+        self.angle_label.grid(row=7, column=0, sticky="w", padx=5, pady=5)
+        self.angle_spinbox = Spinbox(self, from_=1, to=180, width=5)
+        self.angle_spinbox.grid(row=7, column=1, sticky="w", padx=5, pady=5)
+
+        # Bouton pour appliquer les paramètres du L-System
+        self.bouton_appliquer = Button(self, text="Appliquer", command=self.appliquer_parametres_lsystem)
+        self.bouton_appliquer.grid(row=8, column=0, columnspan=2, pady=5)
+
+        # Masquer les champs de saisie au départ
+        self.cacher_parametres()
 
         self.title("L-System")
 
+    def afficher_parametres(self):
+        """ Affiche les champs de saisie pour les paramètres du L-System """
+        print("Affichage du menu personnalisé")
+        self.chaine_depart_label.grid(row=3, column=0, sticky="w", padx=5, pady=5)
+        self.chaine_depart_entry.grid(row=3, column=1, sticky="w", padx=5, pady=5)
+        self.regle_label.grid(row=4, column=0, sticky="w", padx=5, pady=5)
+        self.regle_entry.grid(row=4, column=1, sticky="w", padx=5, pady=5)
+        self.iterations_label.grid(row=5, column=0, sticky="w", padx=5, pady=5)
+        self.iterations_spinbox.grid(row=5, column=1, sticky="w", padx=5, pady=5)
+        self.longueur_label.grid(row=6, column=0, sticky="w", padx=5, pady=5)
+        self.longueur_spinbox.grid(row=6, column=1, sticky="w", padx=5, pady=5)
+        self.angle_label.grid(row=7, column=0, sticky="w", padx=5, pady=5)
+        self.angle_spinbox.grid(row=7, column=1, sticky="w", padx=5, pady=5)
+        self.bouton_appliquer.grid(row=8, column=0, columnspan=2, pady=5)
 
+    def cacher_parametres(self):
+        """ Cache les champs de saisie pour les paramètres du L-System """
+        self.chaine_depart_label.grid_forget()
+        self.chaine_depart_entry.grid_forget()
+        self.regle_label.grid_forget()
+        self.regle_entry.grid_forget()
+        self.iterations_label.grid_forget()
+        self.iterations_spinbox.grid_forget()
+        self.longueur_label.grid_forget()
+        self.longueur_spinbox.grid_forget()
+        self.angle_label.grid_forget()
+        self.angle_spinbox.grid_forget()
+        self.bouton_appliquer.grid_forget()
 
-window = Window()
-window.mainloop()
+    def appliquer_parametres_lsystem(self):
+        """ Applique les paramètres à la fonction du L-System """
+        print("Appliquer la règle personnalisée")
+        chaine_depart = self.chaine_depart_entry.get()
+        regle = self.regle_entry.get()
+        iterations = int(self.iterations_spinbox.get())
+        longueur = int(self.longueur_spinbox.get())
+        angle = int(self.angle_spinbox.get())
+
+        # Effacer l'ancien dessin
+        self.canvas.delete("all")
         
+        # Appeler la fonction dessiner_lsystem avec les paramètres définis par l'utilisateur
+        dessiner_lsystem(self.canvas, chaine_depart, regle, iterations, longueur, angle)
+
+
+

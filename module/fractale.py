@@ -80,3 +80,12 @@ def flocon(canvas):
     regle = ["F", "F+F--F+F"]
     canvas.delete("all")
     dessiner_lsystem(canvas, "F--F--F", regle, 4, longueur=5, angle=60)
+
+def hilbert(canvas):
+    # Règles pour la courbe de Hilbert
+    regle = ["X", "+YF", "Y", "-X+Y", "F", "F"]
+    
+    canvas.delete("all")
+    # Appeler la fonction dessiner_lsystem avec les paramètres nécessaires
+    dessiner_lsystem(canvas, "X", regle, 10, longueur=20, angle=12)
+

@@ -2,5 +2,6 @@ from interface import *
 
 
 
-window = Window()
-window.mainloop
+# Créer et lancer la fenêtre
+fenetre = Fenetre()
+fenetre.mainloop()
