@@ -1,5 +1,6 @@
 import math
 import colorsys
+from export import *
 
 def get_color(progress, depth):
     # Changement de couleur selon la progression et la profondeur
@@ -63,29 +64,26 @@ def dessiner_lsystem(canvas, chaine_depart, regle, iterations, longueur=10, angl
 
 # Exemples de L-systèmes fractals
 def arbre(canvas):
-    # Règle pour un arbre fractal
-    regle = ["F", "FF+[+F-F-F]-[-F+F+F]"]
-    regle2 = ["F", "F--[+F-F-F]+X", "X", "F[--+--]F"]
+    # Importer les données depuis le fichier arbre.frtl
+    graine, regle, iteration, longueur, angle = importer('./preset/arbre.frtl')
     canvas.delete("all")
-    dessiner_lsystem(canvas, "F", regle, 4, longueur=20, angle=-122.5)
+    dessiner_lsystem(canvas, graine, regle, iteration, longueur, angle)
 
 def fougere(canvas):
-    # Règle pour une fougère
-    regle = ["X", "F+[[X]-X]-F[-FX]+X", "F", "FF"]
+    # Importer les données depuis le fichier fougere.frtl
+    graine, regle, iteration, longueur, angle = importer('./preset/fougere.frtl')
     canvas.delete("all")
-    dessiner_lsystem(canvas, "X", regle, 5, longueur=5, angle=25)
+    dessiner_lsystem(canvas, graine, regle, iteration, longueur, angle)
 
 def flocon(canvas):
-    # Règle pour un flocon de Koch
-    regle = ["F", "F+F--F+F"]
+    # Importer les données depuis le fichier flocon.frtl
+    graine, regle, iteration, longueur, angle = importer('./preset/flocon.frtl')
     canvas.delete("all")
-    dessiner_lsystem(canvas, "F--F--F", regle, 4, longueur=5, angle=60)
+    dessiner_lsystem(canvas, graine, regle, iteration, longueur, angle)
 
 def hilbert(canvas):
-    # Règles pour la courbe de Hilbert
-    regle = ["X", "+YF", "Y", "-X+Y", "F", "F"]
-    
+    # Importer les données depuis le fichier hilbert.frtl
+    graine, regle, iteration, longueur, angle = importer('./preset/hilbert.frtl')
     canvas.delete("all")
-    # Appeler la fonction dessiner_lsystem avec les paramètres nécessaires
-    dessiner_lsystem(canvas, "X", regle, 10, longueur=20, angle=12)
+    dessiner_lsystem(canvas, graine, regle, iteration, longueur, angle)
 

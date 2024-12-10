@@ -1,0 +1,5 @@
+graine: X
+regle: ['X', '+YF', 'Y', '-X+Y', 'F', 'F']
+iteration: 10
+longueur: 20
+angle: 12

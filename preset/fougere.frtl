@@ -1,0 +1,5 @@
+graine: X
+regle: ['X', 'F+[[X]-X]-F[-FX]+X', 'F', 'FF']
+iteration: 5
+longueur: 5
+angle: 25
