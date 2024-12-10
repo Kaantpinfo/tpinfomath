@@ -1,5 +1,7 @@
 from tkinter import Tk, Button, Canvas, Menu, Label, Entry, Spinbox
 from fractale import *
+from export import *
+from preset import *
 
 class Fenetre(Tk):
     def __init__(self):
@@ -12,7 +14,7 @@ class Fenetre(Tk):
         # Menu Fichier
         menu_fichier = Menu(menu_bar, tearoff=0)
         menu_bar.add_cascade(label="Fichier", menu=menu_fichier)
-        menu_fichier.add_command(label="Charger")
+        menu_fichier.add_command(label="Charger", command=lambda: charger(self.canvas))
         menu_fichier.add_command(label="Exporter")
         
         # Menu Fractale

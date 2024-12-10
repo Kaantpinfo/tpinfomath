@@ -1,4 +1,7 @@
 import os
+import tkinter as tk
+from tkinter import filedialog
+from fractale import dessiner_lsystem
 
 def exporter(graine, regle, iteration, longueur, angle, nom_fichier, dossier):
     try:
@@ -37,3 +40,28 @@ def importer(nom_fichier):
     except Exception as e:
         print(f"Une erreur s'est produite lors de l'importation : {e}")
         return None
+
+def charger(canvas):
+    # Créer une fenêtre tkinter (sans l'afficher)
+    root = tk.Tk()
+    root.withdraw()  # Masquer la fenêtre principale tkinter
+
+    # Ouvrir une boîte de dialogue pour choisir le fichier à importer
+    fichier_selectionne = filedialog.askopenfilename(
+        title="Sélectionnez un fichier .frtl",
+        filetypes=[("Fichiers Fractales", "*.frtl"), ("Tous les fichiers", "*.*")]
+    )
+
+    if fichier_selectionne:  # Si l'utilisateur a sélectionné un fichier
+        # Utiliser la fonction importer pour traiter le fichier sélectionné
+        result = importer(fichier_selectionne)
+
+        if result:
+            graine, regle, iteration, longueur, angle = result
+            print(f"Fichier importé avec succès !\nGraine: {graine}\nRègle: {regle}\nItérations: {iteration}\nLongueur: {longueur}\nAngle: {angle}")
+
+            dessiner_lsystem(canvas, graine, regle, iteration, longueur, angle)
+        else:
+            print("Erreur dans l'importation du fichier.")
+    else:
+        print("Aucun fichier sélectionné.")

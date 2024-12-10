@@ -1,6 +1,5 @@
 import math
 import colorsys
-from export import *
 
 def get_color(progress, depth):
     # Changement de couleur selon la progression et la profondeur
@@ -13,7 +12,22 @@ def get_color(progress, depth):
     color = f'#{int(R*255):02X}{int(G*255):02X}{int(B*255):02X}'
     return color
 
-    
+
+def lsystem(chaine, regle, iteration):
+    for _ in range(iteration):
+        next_gen = ""
+        for c in chaine:
+            found = False
+            for j in range(0, len(regle), 2):
+                if c == regle[j]:
+                    next_gen += regle[j + 1]
+                    found = True
+                    break
+            if not found:
+                next_gen += c
+        chaine = next_gen
+    return chaine
+
 def interpreter(commandes, canvas, longueur=10, angle=25):
 
     x, y = 400, 100
@@ -43,47 +57,8 @@ def interpreter(commandes, canvas, longueur=10, angle=25):
         elif cmd == ']':
             x, y, direction = stack.pop()
 
-def lsystem(chaine, regle, iteration):
-    for _ in range(iteration):
-        next_gen = ""
-        for c in chaine:
-            found = False
-            for j in range(0, len(regle), 2):
-                if c == regle[j]:
-                    next_gen += regle[j + 1]
-                    found = True
-                    break
-            if not found:
-                next_gen += c
-        chaine = next_gen
-    return chaine
-
-def dessiner_lsystem(canvas, chaine_depart, regle, iterations, longueur=10, angle=25):
+def dessiner_lsystem(canvas, chaine_depart, regle, iterations, longueur, angle):
     resultat = lsystem(chaine_depart, regle, iterations)
     interpreter(resultat, canvas, longueur, angle)
 
-# Exemples de L-systèmes fractals
-def arbre(canvas):
-    # Importer les données depuis le fichier arbre.frtl
-    graine, regle, iteration, longueur, angle = importer('./preset/arbre.frtl')
-    canvas.delete("all")
-    dessiner_lsystem(canvas, graine, regle, iteration, longueur, angle)
-
-def fougere(canvas):
-    # Importer les données depuis le fichier fougere.frtl
-    graine, regle, iteration, longueur, angle = importer('./preset/fougere.frtl')
-    canvas.delete("all")
-    dessiner_lsystem(canvas, graine, regle, iteration, longueur, angle)
-
-def flocon(canvas):
-    # Importer les données depuis le fichier flocon.frtl
-    graine, regle, iteration, longueur, angle = importer('./preset/flocon.frtl')
-    canvas.delete("all")
-    dessiner_lsystem(canvas, graine, regle, iteration, longueur, angle)
-
-def hilbert(canvas):
-    # Importer les données depuis le fichier hilbert.frtl
-    graine, regle, iteration, longueur, angle = importer('./preset/hilbert.frtl')
-    canvas.delete("all")
-    dessiner_lsystem(canvas, graine, regle, iteration, longueur, angle)
 
