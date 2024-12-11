@@ -35,7 +35,7 @@ class Fenetre(Tk):
         #Menu personalisé
         menu_perso = Menu(menu_bar, tearoff=0)
         menu_bar.add_cascade(label="Edition", menu=menu_perso)
-        menu_fractale.add_command(label="Personnalisé", command=self.afficher_parametres)
+        menu_perso.add_command(label="Personnalisé", command=self.afficher_parametres)
 
         # Canvas pour afficher les fractales
         self.canvas = Canvas(self, width=800, height=600, bg="black")
@@ -90,6 +90,8 @@ class Fenetre(Tk):
         self.angle_label.grid(row=7, column=0, sticky="w", padx=5, pady=5)
         self.angle_spinbox.grid(row=7, column=1, sticky="w", padx=5, pady=5)
         self.bouton_appliquer.grid(row=8, column=0, columnspan=2, pady=5)
+
+        self.canvas.delete("all")
 
     def cacher_parametres(self):
         """ Cache les champs de saisie pour les paramètres du L-System """
