@@ -31,6 +31,10 @@ class Fenetre(Tk):
         menu_fractale.add_command(label="Fougère", command=lambda: (fougere(self.canvas), self.cacher_parametres()))
         menu_fractale.add_command(label="Flocon de Koch", command=lambda: (flocon(self.canvas), self.cacher_parametres()))
         menu_fractale.add_command(label="Hilbert", command=lambda: (hilbert(self.canvas), self.cacher_parametres()))
+        
+        #Menu personalisé
+        menu_perso = Menu(menu_bar, tearoff=0)
+        menu_bar.add_cascade(label="Edition", menu=menu_perso)
         menu_fractale.add_command(label="Personnalisé", command=self.afficher_parametres)
 
         # Canvas pour afficher les fractales
