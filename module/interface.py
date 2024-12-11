@@ -7,6 +7,13 @@ class Fenetre(Tk):
     def __init__(self):
         super().__init__()
 
+        # Variables pour stocker les paramètres actuels
+        self.graine = ""
+        self.regle = []
+        self.iterations = 0
+        self.longueur = 0
+        self.angle = 0
+
         # Barre de menu
         menu_bar = Menu(self)
         Fenetre.config(self, menu=menu_bar)
@@ -15,7 +22,7 @@ class Fenetre(Tk):
         menu_fichier = Menu(menu_bar, tearoff=0)
         menu_bar.add_cascade(label="Fichier", menu=menu_fichier)
         menu_fichier.add_command(label="Charger", command=lambda: charger(self.canvas))
-        menu_fichier.add_command(label="Exporter")
+        menu_fichier.add_command(label="Exporter", command=lambda: sauvegarder(self.graine, self.regle, self.iterations, self.longueur, self.angle))
         
         # Menu Fractale
         menu_fractale = Menu(menu_bar, tearoff=0)
@@ -97,17 +104,16 @@ class Fenetre(Tk):
     def appliquer_parametres_lsystem(self):
         """ Applique les paramètres à la fonction du L-System """
         print("Appliquer la règle personnalisée")
-        chaine_depart = self.chaine_depart_entry.get()
-        regle = self.regle_entry.get()
-        iterations = int(self.iterations_spinbox.get())
-        longueur = int(self.longueur_spinbox.get())
-        angle = int(self.angle_spinbox.get())
+        self.graine = self.chaine_depart_entry.get()  # Enregistrer la graine
+        self.regle = self.regle_entry.get().split(",")  # Enregistrer la règle comme une liste
+        self.iterations = int(self.iterations_spinbox.get())  # Enregistrer les itérations
+        self.longueur = int(self.longueur_spinbox.get())  # Enregistrer la longueur
+        self.angle = int(self.angle_spinbox.get())  # Enregistrer l'angle
 
         # Effacer l'ancien dessin
         self.canvas.delete("all")
         
         # Appeler la fonction dessiner_lsystem avec les paramètres définis par l'utilisateur
-        dessiner_lsystem(self.canvas, chaine_depart, regle, iterations, longueur, angle)
-
+        dessiner_lsystem(self.canvas, self.graine, self.regle, self.iterations, self.longueur, self.angle)
 
 

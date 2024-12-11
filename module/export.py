@@ -65,3 +65,28 @@ def charger(canvas):
             print("Erreur dans l'importation du fichier.")
     else:
         print("Aucun fichier sélectionné.")
+
+
+def sauvegarder(graine, regle, iteration, longueur, angle):
+    # Créer une fenêtre tkinter (sans l'afficher)
+    root = tk.Tk()
+    root.withdraw()  # Masquer la fenêtre principale tkinter
+    
+    # Ouvrir une boîte de dialogue pour choisir l'emplacement du fichier à sauvegarder
+    fichier_selectionne = filedialog.asksaveasfilename(
+        title="Sélectionnez l'emplacement pour sauvegarder le fichier",
+        defaultextension=".frtl",  # Extension par défaut du fichier
+        filetypes=[("Fichiers Fractales", "*.frtl"), ("Tous les fichiers", "*.*")]
+    )
+
+    if fichier_selectionne:  # Si l'utilisateur a sélectionné un fichier
+        # Extraire le dossier et le nom de fichier du chemin sélectionné
+        dossier = os.path.dirname(fichier_selectionne)
+        nom_fichier = os.path.basename(fichier_selectionne)
+
+        # Appeler la fonction exporter pour sauvegarder le fichier
+        exporter(graine, regle, iteration, longueur, angle, nom_fichier, dossier)
+
+        print(f"Les données ont été exportées dans '{fichier_selectionne}' avec succès.")
+
+
